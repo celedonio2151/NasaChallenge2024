@@ -116,7 +116,7 @@ function Navbar({ token, user, isOnline, setUser, setToken }) {
 					to="/"
 					className={({ isActive }) => (isActive ? "active" : "")}
 				>
-					Home
+					Inicio
 				</NavLink>
 				<NavLink
 					to="/objetos-celestes"
