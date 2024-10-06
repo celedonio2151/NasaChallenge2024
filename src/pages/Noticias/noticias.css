@@ -1,0 +1,81 @@
+/* Estilos para los botones de filtro */
+.noticias-container {
+	margin: 2%;
+}
+
+.filtros {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	flex-wrap: wrap;
+	margin-bottom: 20px;
+}
+
+.filtros button {
+	padding: 10px 20px;
+	background-color: hsl(211, 26%, 42%);
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.filtros button:hover {
+	background-color: #0056b3;
+}
+
+/* Grid para las noticias */
+.noticias-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+	gap: 20px; /* Espacio entre las tarjetas */
+	margin-top: 20px; /* Margen superior para separación */
+}
+
+/* Tarjetas de noticias */
+.noticia-card {
+	border-radius: 10px; /* Bordes redondeados */
+	overflow: hidden; /* Ocultar partes que sobresalen */
+	position: relative; /* Para la superposición de contenido */
+	background-color: transparent; /* Fondo transparente para la tarjeta completa */
+	color: white; /* Color del texto */
+	/* box-shadow: 2px 2px 2px gray; */
+	border: 1px solid gray;
+	padding: 2rem;
+}
+
+/* Contenedor de la imagen */
+.noticia-imagen-container {
+	position: relative; /* Para posicionar el título sobre la imagen */
+}
+
+/* Imagen de la noticia */
+.noticia-imagen {
+	width: 100%; /* Ancho completo */
+	height: auto; /* Altura automática para mantener la proporción */
+	border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Título superpuesto a la imagen */
+.noticia-info {
+	position: absolute;
+	bottom: 0; /* Para que esté en la parte inferior de la imagen */
+	left: 0;
+	width: 100%;
+	padding: 10px;
+	background-color: rgba(0, 0, 0, 0); /* Fondo transparente */
+	color: white;
+	text-align: center; /* Centrar el texto */
+}
+
+.noticia-info h3 {
+	margin: 0; /* Sin margen para el título */
+	color: white; /* Color del texto */
+}
+
+/* Estilo del contenido (descripción) debajo de la imagen */
+p {
+	margin-top: 10px; /* Separación entre el contenido y la imagen */
+	color: #ccc; /* Color gris claro */
+	background-color: transparent; /* Fondo transparente */
+}

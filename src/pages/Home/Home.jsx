@@ -155,6 +155,9 @@ const SolarSystem = () => {
   const handleARButtonClick = () => {
     alert("¡Funcionalidad de AR no implementada aún!");
   };
+  const handleESButtonClick = () => {
+    alert("¡Funcionalidad de Cambio de Idioma no implementada aún!");
+  };
 
   return (
     <div>
@@ -173,6 +176,8 @@ const SolarSystem = () => {
         <button onClick={handleToggleOrbits}>Ocultar Orbitas</button>
         <br />
         <button onClick={handleARButtonClick}>Iniciar AR</button> {/* Botón de AR */}
+        <br />
+        <button onClick={handleESButtonClick}>ES</button> {/* Botón de AR */}
       </div>
     </div>
   );
