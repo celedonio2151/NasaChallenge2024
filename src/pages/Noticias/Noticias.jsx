@@ -82,7 +82,7 @@ export default function Noticias() {
   };
 
   return (
-    <div>
+    <div className="noticias-container">
       <h2>Página de Noticias</h2>
       <div className="filtros">
         <button onClick={() => manejarFiltro("Todos")}>Todos</button>
