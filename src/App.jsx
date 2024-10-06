@@ -10,6 +10,8 @@ import Noticias from "./pages/Noticias/Noticias";
 import ComparacionObjetos from "./pages/Comparacion/ComparacionObjetos";
 import NavBar from "./components/NavBar/NavBar";
 
+
+
 function App() {
 	const [count, setCount] = useState(0);
 
