@@ -162,12 +162,12 @@ const SolarSystem = () => {
       <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 1 }}>
         <label>
           Velocidad:
-          <input type="range" min="0" max="5" step="0.1" value={speedMultiplier} onChange={handleSpeedChange} />
+          <input type="range" min="-5" max="25" step="0.1" value={speedMultiplier} onChange={handleSpeedChange} />
         </label>
         <br />
         <label>
           Zoom:
-          <input type="range" min="20" max="100" step="1" value={zoomLevel} onChange={handleZoomChange} />
+          <input type="range" min="0" max="100" step="1" value={zoomLevel} onChange={handleZoomChange} />
         </label>
         <br />
         <button onClick={handleToggleOrbits}>Ocultar Orbitas</button>
