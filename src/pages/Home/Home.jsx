@@ -1,4 +1,3 @@
-// SolarSystem.js
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -14,7 +13,7 @@ const textures = {
   Saturn: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFEBAq2y8p5pY3Q3JR4DE-fAiyFrXeGTj6VA&s',
   Uranus: 'https://static.vecteezy.com/system/resources/previews/001/998/851/non_2x/abstract-background-of-uranus-surface-free-vector.jpg',
   Neptune: 'https://img.freepik.com/fotos-premium/fondo-textura-superficie-neptuno_889432-963.jpg',
-  Sun: 'https://cdn.pixabay.com/photo/2014/10/12/12/06/sun-485034_1280.png', // Textura del Sol
+  Sun: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQVzB_yWBuDTgsoOizvPjKHB5_wWYCGSpZuQ&s',
 };
 
 const planetsData = [
@@ -30,41 +29,50 @@ const planetsData = [
 
 const SolarSystem = () => {
   const sceneRef = useRef();
-  const [speedMultiplier, setSpeedMultiplier] = useState(50);
+  const [zoomLevel, setZoomLevel] = useState(40);
   const [showOrbits, setShowOrbits] = useState(true);
+  const [speedMultiplier, setSpeedMultiplier] = useState(1); // Controlar la velocidad
 
   useEffect(() => {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
+    scene.background = new THREE.Color(0x000000); // Fondo negro
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 20, 40); // Aumenté la distancia de la cámara
+    camera.position.set(0, 20, zoomLevel);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     sceneRef.current.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableZoom = true;
+    controls.enableZoom = true; // Habilitar zoom manual
+    controls.zoomSpeed = 0.5; // Ajustar la velocidad del zoom
 
-    const ambientLight = new THREE.AmbientLight(0x404040);
+    // Aumentar la luz ambiental
+    const ambientLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 1);
+    // Aumentar la luz puntual
+    const pointLight = new THREE.PointLight(0xffffff, 2);
     pointLight.position.set(50, 50, 50);
     scene.add(pointLight);
 
     const textureLoader = new TextureLoader();
 
     // Crear Sol con textura
-    const sunGeometry = new THREE.SphereGeometry(1.5, 32, 32); // Tamaño del Sol
-    const sunMaterial = new THREE.MeshStandardMaterial({ map: textureLoader.load(textures.Sun) });
+    const sunGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+    const sunMaterial = new THREE.MeshBasicMaterial({
+      map: textureLoader.load(textures.Sun)
+    });
     const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
     scene.add(sunMesh);
 
+    // Cargar texturas de planetas
     const planets = planetsData.map(({ name, size, distance, speed, eccentricity, inclination, texture }) => {
       const geometry = new THREE.SphereGeometry(size, 32, 32);
-      const material = new THREE.MeshStandardMaterial({ map: textureLoader.load(texture) });
+      const material = new THREE.MeshBasicMaterial({
+        map: textureLoader.load(texture),
+      });
       const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
 
@@ -84,7 +92,7 @@ const SolarSystem = () => {
       );
       const points = orbitCurve.getPoints(100);
       const orbitGeometry = new THREE.BufferGeometry().setFromPoints(points.map(p => new THREE.Vector3(p.x, 0, p.y)));
-      const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.4 });
+      const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.6 });
       const orbit = new THREE.Line(orbitGeometry, orbitMaterial);
       orbit.rotation.x = Math.PI / 2 - THREE.MathUtils.degToRad(inclination);
       orbit.rotation.z = Math.PI / 2;
@@ -106,16 +114,12 @@ const SolarSystem = () => {
       requestAnimationFrame(animate);
 
       planets.forEach((planet) => {
-        const meanAnomaly = (Date.now() * planet.speed * speedMultiplier) / 1000;
+        const meanAnomaly = (Date.now() * planet.speed * speedMultiplier) / 1000; // Usar speedMultiplier
         const trueAnomaly = calculateTrueAnomaly(planet.eccentricity, meanAnomaly);
-        const distance = planet.distance * (1 - Math.pow(planet.eccentricity, 2)) / (1 + planet.eccentricity * Math.cos(trueAnomaly));
-
-        const xPos = distance * Math.cos(trueAnomaly);
-        const yPos = distance * Math.sin(THREE.MathUtils.degToRad(planet.inclination));
-        const zPos = distance * Math.sin(trueAnomaly);
-
-        planet.mesh.position.set(xPos, yPos, zPos);
-        planet.orbit.rotation.y += planet.speed * speedMultiplier * 0.001; // Rotación para enfatizar movimiento
+        const xPos = planet.distance * Math.cos(trueAnomaly);
+        const zPos = planet.distance * Math.sin(trueAnomaly);
+        planet.mesh.position.set(xPos, 0, zPos);
+        planet.orbit.rotation.y += (planet.speed * speedMultiplier) * 0.001; // Rotación para enfatizar movimiento
       });
 
       controls.update();
@@ -124,34 +128,51 @@ const SolarSystem = () => {
 
     animate();
 
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
     return () => {
+      renderer.dispose();
       sceneRef.current.removeChild(renderer.domElement);
     };
-  }, [speedMultiplier, showOrbits]);
+  }, [showOrbits, speedMultiplier, zoomLevel]);
 
-  const toggleOrbits = () => {
-    setShowOrbits(!showOrbits);
+  const handleSpeedChange = (event) => {
+    setSpeedMultiplier(event.target.value);
   };
 
-  const handleSpeedChange = (e) => {
-    setSpeedMultiplier(Number(e.target.value));
+  const handleToggleOrbits = () => {
+    setShowOrbits((prev) => !prev);
+  };
+
+  const handleZoomChange = (event) => {
+    setZoomLevel(event.target.value);
+  };
+
+  const handleARButtonClick = () => {
+    alert("¡Funcionalidad de AR no implementada aún!");
   };
 
   return (
     <div>
-      <div ref={sceneRef} style={{ width: '100%', height: '600px' }}></div>
-      <div>
-        <button onClick={toggleOrbits}>
-          {showOrbits ? 'Ocultar órbitas' : 'Mostrar órbitas'}
-        </button>
-        <input
-          type="range"
-          min="1"
-          max="200"
-          defaultValue={speedMultiplier}
-          onChange={handleSpeedChange}
-        />
-        <label>Velocidad: {speedMultiplier}</label>
+      <div ref={sceneRef} style={{ width: '100%', height: '100vh' }} />
+      <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 1 }}>
+        <label>
+          Velocidad:
+          <input type="range" min="0" max="5" step="0.1" value={speedMultiplier} onChange={handleSpeedChange} />
+        </label>
+        <br />
+        <label>
+          Zoom:
+          <input type="range" min="20" max="100" step="1" value={zoomLevel} onChange={handleZoomChange} />
+        </label>
+        <br />
+        <button onClick={handleToggleOrbits}>Ocultar Orbitas</button>
+        <br />
+        <button onClick={handleARButtonClick}>Iniciar AR</button> {/* Botón de AR */}
       </div>
     </div>
   );
