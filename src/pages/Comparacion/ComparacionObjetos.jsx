@@ -75,7 +75,7 @@ const Comparison = () => {
 
     return () => {
       renderer.dispose();
-      sceneRef.current.removeChild(renderer.domElement);
+      // sceneRef.current.removeChild(renderer.domElement);
     };
   }, [planet1, planet2, zoom]);
 

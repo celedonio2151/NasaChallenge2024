@@ -1,0 +1,13 @@
+.group_buttons {
+	/* background-color: blue; */
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 110px;
+	border: 1px solid gray;
+}
+
+.group_buttons button {
+	padding: 0.4rem;
+}
