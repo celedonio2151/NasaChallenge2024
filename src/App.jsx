@@ -9,6 +9,7 @@ import SimuladorImpactos from "./pages/Impactos/SimuladorImpactos";
 import Noticias from "./pages/Noticias/Noticias";
 import ComparacionObjetos from "./pages/Comparacion/ComparacionObjetos";
 import NavBar from "./components/NavBar/NavBar";
+import PHAsPotenciales from "./pages/Impactos/PHAsPotenciales";
 
 
 
@@ -24,6 +25,7 @@ function App() {
 				<Route path="/comparacion-objetos" element={<ComparacionObjetos />} />
 				<Route path="/simulador-impactos" element={<SimuladorImpactos />} />
 				<Route path="/noticias" element={<Noticias />} />
+				<Route path="/PHAsPotenciales" element={<PHAsPotenciales />} />
 			</Routes>
 		</BrowserRouter>
 	);
